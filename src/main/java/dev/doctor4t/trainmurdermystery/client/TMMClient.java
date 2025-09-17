@@ -4,12 +4,13 @@ import com.google.common.collect.Maps;
 import dev.doctor4t.ratatouille.client.util.OptionLocker;
 import dev.doctor4t.ratatouille.client.util.ambience.AmbienceUtil;
 import dev.doctor4t.ratatouille.client.util.ambience.BackgroundAmbience;
-import dev.doctor4t.trainmurdermystery.TrainMurderMystery;
-import dev.doctor4t.trainmurdermystery.cca.TrainMurderMysteryComponents;
+import dev.doctor4t.trainmurdermystery.TMM;
+import dev.doctor4t.trainmurdermystery.cca.TMMComponents;
 import dev.doctor4t.trainmurdermystery.cca.WorldGameComponent;
 import dev.doctor4t.trainmurdermystery.client.model.TrainMurderMysteryEntityModelLayers;
 import dev.doctor4t.trainmurdermystery.client.render.block_entity.SmallDoorBlockEntityRenderer;
 import dev.doctor4t.trainmurdermystery.client.util.TMMItemTooltips;
+import dev.doctor4t.trainmurdermystery.game.TMMGameLoop;
 import dev.doctor4t.trainmurdermystery.index.*;
 import dev.doctor4t.trainmurdermystery.util.HandParticleManager;
 import dev.doctor4t.trainmurdermystery.util.MatrixParticleManager;
@@ -22,7 +23,6 @@ import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
 import net.fabricmc.fabric.api.client.model.loading.v1.ModelLoadingPlugin;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.client.rendering.v1.EntityRendererRegistry;
-import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderEvents;
 import net.minecraft.block.Block;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.AbstractClientPlayerEntity;
@@ -36,6 +36,7 @@ import net.minecraft.client.render.entity.EmptyEntityRenderer;
 import net.minecraft.client.render.model.UnbakedModel;
 import net.minecraft.client.util.InputUtil;
 import net.minecraft.client.util.ModelIdentifier;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.particle.ParticleTypes;
 import net.minecraft.registry.Registries;
@@ -46,7 +47,7 @@ import org.lwjgl.glfw.GLFW;
 
 import java.util.*;
 
-public class TrainMurderMysteryClient implements ClientModInitializer {
+public class TMMClient implements ClientModInitializer {
     public static HandParticleManager handParticleManager;
     public static Map<PlayerEntity, Vec3d> particleMap;
     private static float trainSpeed;
@@ -69,51 +70,51 @@ public class TrainMurderMysteryClient implements ClientModInitializer {
         particleMap = new HashMap<>();
 
         // Register particle factories
-        TrainMurderMysteryParticles.registerFactories();
+        TMMParticles.registerFactories();
 
         // Entity renderer registration
-        EntityRendererRegistry.register(TrainMurderMysteryEntities.SEAT, EmptyEntityRenderer::new);
+        EntityRendererRegistry.register(TMMEntities.SEAT, EmptyEntityRenderer::new);
 
         // Register entity model layers
         TrainMurderMysteryEntityModelLayers.initialize();
 
         // Block render layers
         BlockRenderLayerMap.INSTANCE.putBlocks(RenderLayer.getCutout(),
-                TrainMurderMysteryBlocks.STAINLESS_STEEL_VENT_HATCH,
-                TrainMurderMysteryBlocks.DARK_STEEL_VENT_HATCH,
-                TrainMurderMysteryBlocks.TARNISHED_GOLD_VENT_HATCH,
-                TrainMurderMysteryBlocks.METAL_SHEET_WALKWAY,
-                TrainMurderMysteryBlocks.STAINLESS_STEEL_LADDER,
-                TrainMurderMysteryBlocks.COCKPIT_DOOR,
-                TrainMurderMysteryBlocks.METAL_SHEET_DOOR,
-                TrainMurderMysteryBlocks.GOLDEN_GLASS_PANEL,
-                TrainMurderMysteryBlocks.CULLING_GLASS,
-                TrainMurderMysteryBlocks.STAINLESS_STEEL_WALKWAY,
-                TrainMurderMysteryBlocks.DARK_STEEL_WALKWAY,
-                TrainMurderMysteryBlocks.PANEL_STRIPES,
-                TrainMurderMysteryBlocks.TRIMMED_RAILING_POST,
-                TrainMurderMysteryBlocks.DIAGONAL_TRIMMED_RAILING,
-                TrainMurderMysteryBlocks.TRIMMED_RAILING,
-                TrainMurderMysteryBlocks.TRIMMED_EBONY_STAIRS,
-                TrainMurderMysteryBlocks.WHITE_LOUNGE_COUCH,
-                TrainMurderMysteryBlocks.WHITE_OTTOMAN,
-                TrainMurderMysteryBlocks.WHITE_TRIMMED_BED,
-                TrainMurderMysteryBlocks.BLUE_LOUNGE_COUCH,
-                TrainMurderMysteryBlocks.GREEN_LOUNGE_COUCH,
-                TrainMurderMysteryBlocks.BAR_STOOL,
-                TrainMurderMysteryBlocks.WALL_LAMP,
-                TrainMurderMysteryBlocks.SMALL_BUTTON,
-                TrainMurderMysteryBlocks.ELEVATOR_BUTTON,
-                TrainMurderMysteryBlocks.STAINLESS_STEEL_SPRINKLER,
-                TrainMurderMysteryBlocks.GOLD_SPRINKLER,
-                TrainMurderMysteryBlocks.GOLD_ORNAMENT);
+                TMMBlocks.STAINLESS_STEEL_VENT_HATCH,
+                TMMBlocks.DARK_STEEL_VENT_HATCH,
+                TMMBlocks.TARNISHED_GOLD_VENT_HATCH,
+                TMMBlocks.METAL_SHEET_WALKWAY,
+                TMMBlocks.STAINLESS_STEEL_LADDER,
+                TMMBlocks.COCKPIT_DOOR,
+                TMMBlocks.METAL_SHEET_DOOR,
+                TMMBlocks.GOLDEN_GLASS_PANEL,
+                TMMBlocks.CULLING_GLASS,
+                TMMBlocks.STAINLESS_STEEL_WALKWAY,
+                TMMBlocks.DARK_STEEL_WALKWAY,
+                TMMBlocks.PANEL_STRIPES,
+                TMMBlocks.TRIMMED_RAILING_POST,
+                TMMBlocks.DIAGONAL_TRIMMED_RAILING,
+                TMMBlocks.TRIMMED_RAILING,
+                TMMBlocks.TRIMMED_EBONY_STAIRS,
+                TMMBlocks.WHITE_LOUNGE_COUCH,
+                TMMBlocks.WHITE_OTTOMAN,
+                TMMBlocks.WHITE_TRIMMED_BED,
+                TMMBlocks.BLUE_LOUNGE_COUCH,
+                TMMBlocks.GREEN_LOUNGE_COUCH,
+                TMMBlocks.BAR_STOOL,
+                TMMBlocks.WALL_LAMP,
+                TMMBlocks.SMALL_BUTTON,
+                TMMBlocks.ELEVATOR_BUTTON,
+                TMMBlocks.STAINLESS_STEEL_SPRINKLER,
+                TMMBlocks.GOLD_SPRINKLER,
+                TMMBlocks.GOLD_ORNAMENT);
         BlockRenderLayerMap.INSTANCE.putBlocks(RenderLayer.getTranslucent(),
-                TrainMurderMysteryBlocks.RHOMBUS_GLASS,
-                TrainMurderMysteryBlocks.PRIVACY_GLASS_PANEL,
-                TrainMurderMysteryBlocks.CULLING_BLACK_HULL,
-                TrainMurderMysteryBlocks.CULLING_WHITE_HULL,
-                TrainMurderMysteryBlocks.HULL_GLASS,
-                TrainMurderMysteryBlocks.RHOMBUS_HULL_GLASS);
+                TMMBlocks.RHOMBUS_GLASS,
+                TMMBlocks.PRIVACY_GLASS_PANEL,
+                TMMBlocks.CULLING_BLACK_HULL,
+                TMMBlocks.CULLING_WHITE_HULL,
+                TMMBlocks.HULL_GLASS,
+                TMMBlocks.RHOMBUS_HULL_GLASS);
 
         // Custom block models
         CustomModelProvider customModelProvider = new CustomModelProvider();
@@ -121,28 +122,33 @@ public class TrainMurderMysteryClient implements ClientModInitializer {
 
         // Block Entity Renderers
         BlockEntityRendererFactories.register(
-                TrainMurderMysteryBlockEntities.SMALL_GLASS_DOOR,
-                ctx -> new SmallDoorBlockEntityRenderer(TrainMurderMystery.id("textures/entity/small_glass_door.png"), ctx)
+                TMMBlockEntities.SMALL_GLASS_DOOR,
+                ctx -> new SmallDoorBlockEntityRenderer(TMM.id("textures/entity/small_glass_door.png"), ctx)
         );
         BlockEntityRendererFactories.register(
-                TrainMurderMysteryBlockEntities.SMALL_WOOD_DOOR,
-                ctx -> new SmallDoorBlockEntityRenderer(TrainMurderMystery.id("textures/entity/small_wood_door.png"), ctx)
+                TMMBlockEntities.SMALL_WOOD_DOOR,
+                ctx -> new SmallDoorBlockEntityRenderer(TMM.id("textures/entity/small_wood_door.png"), ctx)
+        );
+        BlockEntityRendererFactories.register(
+                TMMBlockEntities.SMALL_TRAIN_DOOR,
+                ctx -> new SmallDoorBlockEntityRenderer(TMM.id("textures/entity/small_train_door.png"), ctx)
         );
 
         // Ambience
-        AmbienceUtil.registerBackgroundAmbience(new BackgroundAmbience(TrainMurderMysterySounds.AMBIENT_TRAIN_INSIDE, player -> isTrainMoving() && !isSkyVisibleAdjacent(player), 20));
-        AmbienceUtil.registerBackgroundAmbience(new BackgroundAmbience(TrainMurderMysterySounds.AMBIENT_TRAIN_OUTSIDE, player -> isTrainMoving() && isSkyVisibleAdjacent(player), 20));
+        AmbienceUtil.registerBackgroundAmbience(new BackgroundAmbience(TMMSounds.AMBIENT_TRAIN_INSIDE, player -> isTrainMoving() && !isSkyVisibleAdjacent(player), 20));
+        AmbienceUtil.registerBackgroundAmbience(new BackgroundAmbience(TMMSounds.AMBIENT_TRAIN_OUTSIDE, player -> isTrainMoving() && isSkyVisibleAdjacent(player), 20));
 
         // Caching components
         ClientTickEvents.START_WORLD_TICK.register(clientWorld -> {
-            trainSpeed = TrainMurderMysteryComponents.TRAIN.get(clientWorld).getTrainSpeed();
-            GAME_COMPONENT = TrainMurderMysteryComponents.GAME.get(clientWorld);
+            trainSpeed = TMMComponents.TRAIN.get(clientWorld).getTrainSpeed();
+            GAME_COMPONENT = TMMComponents.GAME.get(clientWorld);
         });
 
         // Lock options
         OptionLocker.overrideOption("gamma", 0d);
         //TODO: remove the comment // mfw 15 fps on a 3050 // OptionLocker.overrideOption("renderDistance", 32);
         OptionLocker.overrideOption("showSubtitles", false);
+        OptionLocker.overrideOption("autoJump", false);
         OptionLocker.overrideSoundCategoryVolume("music", 0.0);
         OptionLocker.overrideSoundCategoryVolume("record", 0.1);
         OptionLocker.overrideSoundCategoryVolume("weather", 1.0);
@@ -171,7 +177,7 @@ public class TrainMurderMysteryClient implements ClientModInitializer {
         });
 
         ClientTickEvents.END_CLIENT_TICK.register((client) -> {
-            TrainMurderMysteryClient.handParticleManager.tick();
+            TMMClient.handParticleManager.tick();
         });
 
         ClientPlayNetworking.registerGlobalReceiver(ShootMuzzleS2CPayload.ID, (payload, context) -> {
@@ -196,10 +202,10 @@ public class TrainMurderMysteryClient implements ClientModInitializer {
 
         // Instinct keybind
         instinctKeybind = KeyBindingHelper.registerKeyBinding(new KeyBinding(
-                "key."+TrainMurderMystery.MOD_ID+".instinct",
+                "key."+ TMM.MOD_ID+".instinct",
                 InputUtil.Type.KEYSYM,
                 GLFW.GLFW_KEY_LEFT_ALT,
-                "category."+TrainMurderMystery.MOD_ID+".keybinds"
+                "category."+ TMM.MOD_ID+".keybinds"
         ));
     }
 
@@ -280,8 +286,8 @@ public class TrainMurderMysteryClient implements ClientModInitializer {
         }
     }
 
-    public static boolean shouldRestrictPlayerOptions() {
-        return TrainMurderMystery.shouldRestrictPlayerOptions(MinecraftClient.getInstance().player);
+    public static boolean isPlayerAliveAndInSurvival() {
+        return TMMGameLoop.isPlayerAliveAndSurvival(MinecraftClient.getInstance().player);
     }
 
     public static boolean isHitman() {
@@ -298,5 +304,12 @@ public class TrainMurderMysteryClient implements ClientModInitializer {
 
     public static List<UUID> getTargets() {
         return GAME_COMPONENT.getTargets();
+    }
+
+    public static boolean shouldInstinctHighlight(Entity entityToHighlight) {
+        return isInstinctEnabled() && entityToHighlight instanceof PlayerEntity player && TMMGameLoop.isPlayerAliveAndSurvival(player);
+    }
+    public static boolean isInstinctEnabled() {
+        return TMMClient.instinctKeybind.isPressed() && TMMClient.isHitman() && TMMClient.isPlayerAliveAndInSurvival();
     }
 }
