@@ -3,7 +3,7 @@ package dev.doctor4t.trainmurdermystery.client.gui;
 import dev.doctor4t.trainmurdermystery.cca.PlayerPsychoComponent;
 import dev.doctor4t.trainmurdermystery.cca.TMMComponents;
 import dev.doctor4t.trainmurdermystery.cca.WorldBlackoutComponent;
-import dev.doctor4t.trainmurdermystery.entity.StickyNoteEntity;
+import dev.doctor4t.trainmurdermystery.entity.NoteEntity;
 import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.network.ClientPlayerEntity;
@@ -58,12 +58,12 @@ public class RoleNameRenderer {
             }
             context.getMatrices().pop();
         }
-        if (ProjectileUtil.getCollision(player, entity -> entity instanceof StickyNoteEntity, 2f) instanceof EntityHitResult entityHitResult && entityHitResult.getEntity() instanceof StickyNoteEntity stickyNote) {
+        if (ProjectileUtil.getCollision(player, entity -> entity instanceof NoteEntity, 2f) instanceof EntityHitResult entityHitResult && entityHitResult.getEntity() instanceof NoteEntity note) {
             noteAlpha = MathHelper.lerp(tickCounter.getTickDelta(true) / 4, noteAlpha, 1f);
-            note[0] = Text.literal(stickyNote.getLines()[0]);
-            note[1] = Text.literal(stickyNote.getLines()[1]);
-            note[2] = Text.literal(stickyNote.getLines()[2]);
-            note[3] = Text.literal(stickyNote.getLines()[3]);
+            RoleNameRenderer.note[0] = Text.literal(note.getLines()[0]);
+            RoleNameRenderer.note[1] = Text.literal(note.getLines()[1]);
+            RoleNameRenderer.note[2] = Text.literal(note.getLines()[2]);
+            RoleNameRenderer.note[3] = Text.literal(note.getLines()[3]);
         } else {
             noteAlpha = MathHelper.lerp(tickCounter.getTickDelta(true) / 4, noteAlpha, 0f);
         }

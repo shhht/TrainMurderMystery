@@ -1,6 +1,6 @@
 {
   "parent": "trainmurdermystery:item/small_item",
   "textures": {
-    "layer0": "trainmurdermystery:item/sticky_note"
+    "layer0": "trainmurdermystery:item/note"
   }
 }

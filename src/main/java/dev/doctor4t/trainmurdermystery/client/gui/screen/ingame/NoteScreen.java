@@ -122,7 +122,7 @@ public class NoteScreen extends Screen {
         var scale = 8f;
         context.getMatrices().scale(scale, scale, scale);
         context.getMatrices().translate(-8, -4, 0);
-        context.drawGuiTexture(TMM.id("gui/sticky_note"), 0, 0, 16, 16);
+        context.drawGuiTexture(TMM.id("gui/note"), 0, 0, 16, 16);
         context.getMatrices().pop();
         context.getMatrices().translate(0, 45, 0);
         var i = DyeColor.BLACK.getSignColor();

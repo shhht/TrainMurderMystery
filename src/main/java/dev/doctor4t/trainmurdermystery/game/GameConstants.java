@@ -2,7 +2,6 @@ package dev.doctor4t.trainmurdermystery.game;
 
 import dev.doctor4t.trainmurdermystery.cca.PlayerStoreComponent;
 import dev.doctor4t.trainmurdermystery.index.TMMItems;
-import dev.doctor4t.trainmurdermystery.mixin.ItemStackMixin;
 import dev.doctor4t.trainmurdermystery.util.ShopEntry;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
@@ -71,13 +70,13 @@ public interface GameConstants {
             new ShopEntry(TMMItems.LOCKPICK.getDefaultStack(), 150, ShopEntry.Type.TOOL),
             new ShopEntry(TMMItems.CROWBAR.getDefaultStack(), 150, ShopEntry.Type.TOOL),
             new ShopEntry(TMMItems.BODY_BAG.getDefaultStack(), 150, ShopEntry.Type.TOOL),
-            new ShopEntry(new ItemStack(TMMItems.STICKY_NOTE, 4), 35, ShopEntry.Type.TOOL),
             new ShopEntry(TMMItems.BLACKOUT.getDefaultStack(), 75, ShopEntry.Type.TOOL) {
                 @Override
                 public boolean onBuy(@NotNull PlayerEntity player) {
                     return PlayerStoreComponent.useBlackout(player);
                 }
-            }
+            },
+            new ShopEntry(new ItemStack(TMMItems.NOTE, 4), 35, ShopEntry.Type.TOOL)
     );
     int BLACKOUT_MIN_DURATION = getInTicks(0, 10);
     int BLACKOUT_MAX_DURATION = getInTicks(0, 12);

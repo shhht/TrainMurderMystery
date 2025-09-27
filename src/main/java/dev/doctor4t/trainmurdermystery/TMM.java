@@ -134,7 +134,7 @@ public class TMM implements ModInitializer {
 //              Disable name renderer for the duration of the blackout to prevent people seeing in the dark
 // TORECORD: - Firecracker (luring people, shooting the gun in spectator often led to people rushing in from curiosity, allowing the hitman to manipulate players)
 // TORECORD: - Body bag (can be used to clean up a kill, but very expensive)
-// TODO: - Note (allows the hitman to leave messages, fun for encouraging the roleplay aspect)
+// TORECORD: - Note (allows the hitman to leave messages, fun for encouraging the roleplay aspect)
 
 // TORECORD: Fixing the map
 // TODO: Rearrange the train cars to prevent all POIs being separated by all the sleeping cars

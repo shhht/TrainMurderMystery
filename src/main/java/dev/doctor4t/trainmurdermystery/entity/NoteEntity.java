@@ -6,21 +6,34 @@ import net.minecraft.entity.data.DataTracker;
 import net.minecraft.entity.data.TrackedData;
 import net.minecraft.entity.data.TrackedDataHandlerRegistry;
 import net.minecraft.nbt.NbtCompound;
+import net.minecraft.particle.ParticleTypes;
 import net.minecraft.util.math.Direction;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.NotNull;
 
-public class StickyNoteEntity extends Entity {
-    private static final TrackedData<Integer> DIRECTION = DataTracker.registerData(StickyNoteEntity.class, TrackedDataHandlerRegistry.INTEGER);
-    private static final TrackedData<String> LINE1 = DataTracker.registerData(StickyNoteEntity.class, TrackedDataHandlerRegistry.STRING);
-    private static final TrackedData<String> LINE2 = DataTracker.registerData(StickyNoteEntity.class, TrackedDataHandlerRegistry.STRING);
-    private static final TrackedData<String> LINE3 = DataTracker.registerData(StickyNoteEntity.class, TrackedDataHandlerRegistry.STRING);
-    private static final TrackedData<String> LINE4 = DataTracker.registerData(StickyNoteEntity.class, TrackedDataHandlerRegistry.STRING);
+import java.util.function.Supplier;
+
+public class NoteEntity extends Entity {
+    private static final TrackedData<Integer> DIRECTION = DataTracker.registerData(NoteEntity.class, TrackedDataHandlerRegistry.INTEGER);
+    private static final TrackedData<String> LINE1 = DataTracker.registerData(NoteEntity.class, TrackedDataHandlerRegistry.STRING);
+    private static final TrackedData<String> LINE2 = DataTracker.registerData(NoteEntity.class, TrackedDataHandlerRegistry.STRING);
+    private static final TrackedData<String> LINE3 = DataTracker.registerData(NoteEntity.class, TrackedDataHandlerRegistry.STRING);
+    private static final TrackedData<String> LINE4 = DataTracker.registerData(NoteEntity.class, TrackedDataHandlerRegistry.STRING);
     public final int seed;
 
-    public StickyNoteEntity(EntityType<?> type, World world) {
+    public NoteEntity(EntityType<?> type, World world) {
         super(type, world);
         this.seed = this.random.nextInt();
+    }
+
+    @Override
+    public void tick() {
+        super.tick();
+
+        Supplier<Float> randomGiver = () -> (random.nextFloat() - .5f) * .2f;
+        if (random.nextFloat() < .1f) {
+            this.getWorld().addParticle(ParticleTypes.WAX_ON, this.getX() + randomGiver.get(), this.getY() + randomGiver.get() + this.getHeight() / 2f, this.getZ() + randomGiver.get(), 0, 0, 0);
+        }
     }
 
     public String[] getLines() {

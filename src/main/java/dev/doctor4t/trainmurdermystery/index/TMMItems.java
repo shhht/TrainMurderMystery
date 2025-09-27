@@ -39,7 +39,7 @@ public @SuppressWarnings("unchecked") interface TMMItems {
     Item MARTINI = registrar.create("martini", new CocktailItem(new Item.Settings().maxCount(1).food(FoodComponents.HONEY_BOTTLE)), EQUIPMENT_GROUP);
     Item COSMOPOLITAN = registrar.create("cosmopolitan", new CocktailItem(new Item.Settings().maxCount(1).food(FoodComponents.HONEY_BOTTLE)), EQUIPMENT_GROUP);
     Item CHAMPAGNE = registrar.create("champagne", new CocktailItem(new Item.Settings().maxCount(1).food(FoodComponents.HONEY_BOTTLE)), EQUIPMENT_GROUP);
-    Item STICKY_NOTE = registrar.create("sticky_note", new StickyNoteItem(new Item.Settings().maxCount(4)), EQUIPMENT_GROUP);
+    Item NOTE = registrar.create("note", new NoteItem(new Item.Settings().maxCount(4)), EQUIPMENT_GROUP);
 
     static void initialize() {
         registrar.registerEntries();

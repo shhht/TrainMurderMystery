@@ -208,7 +208,7 @@ public class GameFunctions {
         // discard all player bodies
         for (var body : world.getEntitiesByType(TMMEntities.PLAYER_BODY, playerBodyEntity -> true)) body.discard();
         for (var entity : world.getEntitiesByType(TMMEntities.FIRECRACKER, entity -> true)) entity.discard();
-        for (var entity : world.getEntitiesByType(TMMEntities.STICKY_NOTE, entity -> true)) entity.discard();
+        for (var entity : world.getEntitiesByType(TMMEntities.NOTE, entity -> true)) entity.discard();
 
         // reset all players to adventure mode, clear inventory and teleport to spawn
         var teleportTarget = new TeleportTarget(world, new Vec3d(-872.5, 0, -323), Vec3d.ZERO, 90, 0, TeleportTarget.NO_OP);
@@ -409,7 +409,7 @@ public class GameFunctions {
                 item.discard();
             }
             for (var entity : serverWorld.getEntitiesByType(TMMEntities.FIRECRACKER, entity -> true)) entity.discard();
-            for (var entity : serverWorld.getEntitiesByType(TMMEntities.STICKY_NOTE, entity -> true)) entity.discard();
+            for (var entity : serverWorld.getEntitiesByType(TMMEntities.NOTE, entity -> true)) entity.discard();
 
 
             TMM.LOGGER.info("Train reset successful.");

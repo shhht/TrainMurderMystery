@@ -63,7 +63,8 @@ public class LimitedInventoryScreen extends LimitedHandledScreen<PlayerScreenHan
         @Override
         protected void renderWidget(DrawContext context, int mouseX, int mouseY, float delta) {
             super.renderWidget(context, mouseX, mouseY, delta);
-            context.drawGuiTexture(entry.type().getTexture(), this.getX() - 7, this.getY() - 7, 30, 30);
+//            context.drawGuiTexture(entry.type().getTexture(), this.getX() - 7, this.getY() - 7, 30, 30);
+            context.drawGuiTexture(TMM.id("gui/shop_slot"), this.getX() - 7, this.getY() - 7, 30, 30);
             context.drawItem(this.entry.stack(), this.getX(), this.getY());
             if (this.isHovered()) {
                 this.screen.renderLimitedInventoryTooltip(context, this.entry.stack());
@@ -75,9 +76,10 @@ public class LimitedInventoryScreen extends LimitedHandledScreen<PlayerScreenHan
 
         private void drawShopSlotHighlight(DrawContext context, int x, int y, int z) {
             int color = 0x90FFBF49;
-            context.fillGradient(RenderLayer.getGuiOverlay(), x, y, x + 16, y + 14, color, color, z);
-            context.fillGradient(RenderLayer.getGuiOverlay(), x, y+14, x + 15, y + 15, color, color, z);
-            context.fillGradient(RenderLayer.getGuiOverlay(), x, y+15, x + 14, y + 16, color, color, z);
+            context.fillGradient(RenderLayer.getGuiOverlay(), x, y, x + 16, y + 16, color, color, z);
+//            context.fillGradient(RenderLayer.getGuiOverlay(), x, y, x + 16, y + 14, color, color, z);
+//            context.fillGradient(RenderLayer.getGuiOverlay(), x, y+14, x + 15, y + 15, color, color, z);
+//            context.fillGradient(RenderLayer.getGuiOverlay(), x, y+15, x + 14, y + 16, color, color, z);
         }
 
         @Override
