@@ -3,19 +3,20 @@ package dev.doctor4t.trainmurdermystery.cca;
 import dev.doctor4t.trainmurdermystery.TMM;
 import dev.doctor4t.trainmurdermystery.game.GameConstants;
 import dev.doctor4t.trainmurdermystery.index.TMMItems;
+import dev.doctor4t.trainmurdermystery.util.PsychoActivatePayload;
 import dev.doctor4t.trainmurdermystery.util.ShopEntry;
+import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.registry.RegistryWrapper;
+import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.Text;
 import net.minecraft.util.Colors;
 import org.jetbrains.annotations.NotNull;
 import org.ladysnake.cca.api.v3.component.ComponentKey;
 import org.ladysnake.cca.api.v3.component.ComponentRegistry;
 import org.ladysnake.cca.api.v3.component.sync.AutoSyncedComponent;
-import org.ladysnake.cca.api.v3.component.tick.ClientTickingComponent;
 import org.ladysnake.cca.api.v3.component.tick.ServerTickingComponent;
 
 public class PlayerPsychoComponent implements AutoSyncedComponent, ServerTickingComponent {
@@ -54,6 +55,7 @@ public class PlayerPsychoComponent implements AutoSyncedComponent, ServerTicking
             this.setArmour(GameConstants.PSYCHO_MODE_ARMOUR);
             var gameWorldComponent = TMMComponents.GAME.get(this.player.getWorld());
             gameWorldComponent.setPsychosActive(gameWorldComponent.getPsychosActive() + 1);
+            if (this.player instanceof ServerPlayerEntity serverPlayer) ServerPlayNetworking.send(serverPlayer, new PsychoActivatePayload());
             return true;
         }
         return false;
