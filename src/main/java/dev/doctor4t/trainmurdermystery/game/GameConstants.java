@@ -32,7 +32,7 @@ public interface GameConstants {
         ITEM_COOLDOWNS.put(TMMItems.REVOLVER, getInTicks(0, 5));
         ITEM_COOLDOWNS.put(TMMItems.GRENADE, getInTicks(5, 0));
         ITEM_COOLDOWNS.put(TMMItems.LOCKPICK, getInTicks(3, 0));
-        ITEM_COOLDOWNS.put(TMMItems.CROWBAR, getInTicks(1, 0));
+        ITEM_COOLDOWNS.put(TMMItems.CROWBAR, getInTicks(0, 10));
         ITEM_COOLDOWNS.put(TMMItems.BODY_BAG, getInTicks(5, 0));
         ITEM_COOLDOWNS.put(TMMItems.PSYCHO_MODE, getInTicks(5, 0));
         ITEM_COOLDOWNS.put(TMMItems.BLACKOUT, getInTicks(3, 0));
