@@ -55,7 +55,7 @@ public abstract class DoorBlockEntity extends SyncingBlockEntity {
     }
 
     public void toggle(boolean silent) {
-        if (this.world == null || this.world.getTime() == this.lastUpdate) {
+        if (this.world == null || this.world.getTime() == this.lastUpdate || this.isBlasted()) {
             return;
         }
         this.toggleOpen();

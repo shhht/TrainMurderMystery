@@ -172,13 +172,13 @@ public class TMM implements ModInitializer {
 // TORECORD: Nightvis with instinct for killers
 // TORECORD: Increase knife cooldown
 // TORECORD: Adjust item prices
-// TORECORD: 5s cooldown on the crowbar
+// TORECORD: 10s cooldown on the crowbar
 // TORECORD: Fix role weighting
-// TORECORD: Make killers have to kill all innocents
+// TORECORD: Make killers have to kill all civilians
 // TORECORD: Notes for some / every civilian
 // TORECORD: Grenades kill killers
-// TODO: bug: the screen never fades back in after the game ends, and then the second time the voice never connects, needing two relogs (not sure how to fix that)
-// TODO: Final gamemode, loose ends:
+// TORECORD: Get put in a vc group when dead
+// TORECORD: Final gamemode, loose ends:
 // - Everyone spawns on the train with nothing but a crowbar
 // - One minute into the game, everyone is given a derringer (one bullet) and a bat
 // - Last person standing wins
@@ -187,3 +187,9 @@ public class TMM implements ModInitializer {
 // POST VIDEO
 // TORECORD: Ability to customize time of day for supporters + snow density
 // TODO: Watermark?
+
+
+// TODO: 
+// TODO: Ability to wake up players
+// TODO: Disable mounting chairs if already on one
+// TODO: wake up players before tping
