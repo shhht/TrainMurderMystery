@@ -380,6 +380,10 @@ public class TMMClient implements ClientModInitializer {
         return gameComponent != null && gameComponent.canUseKillerFeatures(MinecraftClient.getInstance().player);
     }
 
+    public static boolean canJump() {
+        return gameComponent != null && gameComponent.canKillersJump() && isKiller();
+    }
+
     public static int getInstinctHighlight(Entity target) {
         if (!isInstinctEnabled()) return -1;
 //        if (target instanceof PlayerBodyEntity) return 0x606060;

@@ -234,7 +234,7 @@ public class GameFunctions {
 
         WorldBlackoutComponent.KEY.get(world).reset();
         TrainWorldComponent trainComponent = TrainWorldComponent.KEY.get(world);
-        trainComponent.setSpeed(0);
+        trainComponent.setPlaying(false);
         trainComponent.setTimeOfDay(TrainWorldComponent.TimeOfDay.DAY);
 
         // discard all player bodies

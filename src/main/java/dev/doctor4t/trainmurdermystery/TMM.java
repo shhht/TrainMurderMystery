@@ -66,6 +66,7 @@ public class TMM implements ModInitializer {
             CheckWeightsCommand.register(dispatcher);
             ResetWeightsCommand.register(dispatcher);
             SetVisualCommand.register(dispatcher);
+            SetTrainSpeedCommand.register(dispatcher);
             ForceRoleCommand.register(dispatcher);
 //            UpdateDoorsCommand.register(dispatcher);
             SetTimerCommand.register(dispatcher);
@@ -74,6 +75,17 @@ public class TMM implements ModInitializer {
             AutoStartCommand.register(dispatcher);
             LockToSupportersCommand.register(dispatcher);
             SetBackfireChanceCommand.register(dispatcher);
+            SetPlayAreaCommand.register(dispatcher);
+            SetReadyAreaCommand.register(dispatcher);
+            SetPlayAreaOffsetCommand.register(dispatcher);
+            SetResetTemplateAreaCommand.register(dispatcher);
+            SetResetPasteAreaCommand.register(dispatcher);
+            SetSpawnPosCommand.register(dispatcher);
+            SetSpectatorSpawnPosCommand.register(dispatcher);
+            SetKillersCanJumpCommand.register(dispatcher);
+            ListLocationsCommand.register(dispatcher);
+            AddLocationCommand.register(dispatcher);
+            RemoveLocationCommand.register(dispatcher);
         }));
 
         // server lock to supporters

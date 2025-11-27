@@ -20,13 +20,13 @@ public class AreasWorldComponent implements AutoSyncedComponent {
         public final float yaw;
         public final float pitch;
 
-        PosWithOrientation(Vec3d pos, float yaw, float pitch) {
+        public PosWithOrientation(Vec3d pos, float yaw, float pitch) {
             this.pos = pos;
             this.yaw = yaw;
             this.pitch = pitch;
         }
 
-        PosWithOrientation(double x, double y, double z, float yaw, float pitch) {
+        public PosWithOrientation(double x, double y, double z, float yaw, float pitch) {
             this(new Vec3d(x, y, z), yaw, pitch);
         }
 
@@ -83,6 +83,7 @@ public class AreasWorldComponent implements AutoSyncedComponent {
 
     public void setSpawnPos(PosWithOrientation spawnPos) {
         this.spawnPos = spawnPos;
+        sync();
     }
 
     public PosWithOrientation getSpectatorSpawnPos() {
@@ -91,6 +92,7 @@ public class AreasWorldComponent implements AutoSyncedComponent {
 
     public void setSpectatorSpawnPos(PosWithOrientation spectatorSpawnPos) {
         this.spectatorSpawnPos = spectatorSpawnPos;
+        sync();
     }
 
     public Box getReadyArea() {
@@ -99,6 +101,7 @@ public class AreasWorldComponent implements AutoSyncedComponent {
 
     public void setReadyArea(Box readyArea) {
         this.readyArea = readyArea;
+        sync();
     }
 
     public Vec3d getPlayAreaOffset() {
@@ -107,6 +110,7 @@ public class AreasWorldComponent implements AutoSyncedComponent {
 
     public void setPlayAreaOffset(Vec3d playAreaOffset) {
         this.playAreaOffset = playAreaOffset;
+        sync();
     }
 
     public Box getPlayArea() {
@@ -115,6 +119,7 @@ public class AreasWorldComponent implements AutoSyncedComponent {
 
     public void setPlayArea(Box playArea) {
         this.playArea = playArea;
+        sync();
     }
 
     public Box getResetTemplateArea() {
@@ -123,6 +128,7 @@ public class AreasWorldComponent implements AutoSyncedComponent {
 
     public void setResetTemplateArea(Box resetTemplateArea) {
         this.resetTemplateArea = resetTemplateArea;
+        sync();
     }
 
     public Box getResetPasteArea() {
@@ -131,6 +137,7 @@ public class AreasWorldComponent implements AutoSyncedComponent {
 
     public void setResetPasteArea(Box resetPasteArea) {
         this.resetPasteArea = resetPasteArea;
+        sync();
     }
 
     public AreasWorldComponent(World world) {

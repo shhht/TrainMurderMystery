@@ -20,7 +20,7 @@ public abstract class KeyBindingMixin {
             return this.equals(MinecraftClient.getInstance().options.swapHandsKey) ||
                     this.equals(MinecraftClient.getInstance().options.chatKey) ||
                     this.equals(MinecraftClient.getInstance().options.commandKey) ||
-                    this.equals(MinecraftClient.getInstance().options.jumpKey) ||
+                    (this.equals(MinecraftClient.getInstance().options.jumpKey) && !TMMClient.canJump()) ||
                     this.equals(MinecraftClient.getInstance().options.togglePerspectiveKey) ||
                     this.equals(MinecraftClient.getInstance().options.dropKey) ||
                     this.equals(MinecraftClient.getInstance().options.advancementsKey);

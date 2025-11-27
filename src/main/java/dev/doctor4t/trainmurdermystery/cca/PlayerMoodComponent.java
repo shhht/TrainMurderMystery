@@ -4,6 +4,7 @@ import com.mojang.datafixers.types.templates.Named;
 import dev.doctor4t.trainmurdermystery.TMM;
 import dev.doctor4t.trainmurdermystery.api.Role;
 import dev.doctor4t.trainmurdermystery.api.TMMRoles;
+import dev.doctor4t.trainmurdermystery.cca.LocationsWorldComponent.Location;
 import dev.doctor4t.trainmurdermystery.client.TMMClient;
 import dev.doctor4t.trainmurdermystery.game.GameConstants;
 import dev.doctor4t.trainmurdermystery.game.GameFunctions;
@@ -26,6 +27,7 @@ import net.minecraft.registry.entry.RegistryEntry;
 import net.minecraft.registry.entry.RegistryEntryList;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.util.Util;
+
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.ladysnake.cca.api.v3.component.ComponentKey;
@@ -147,27 +149,26 @@ public class PlayerMoodComponent implements AutoSyncedComponent, ServerTickingCo
 
     private @Nullable TrainTask generateTask() {
         if (!this.tasks.isEmpty()) return null;
-        HashMap<Task, Float> map = new HashMap<>();
-        float total = 0f;
-        for (Task task : Task.values()) {
-            if (this.tasks.containsKey(task)) continue;
-            float weight = 1f / this.timesGotten.getOrDefault(task, 1);
-            map.put(task, weight);
-            total += weight;
-        }
-        float random = this.player.getRandom().nextFloat() * total;
-        for (Map.Entry<Task, Float> entry : map.entrySet()) {
-            random -= entry.getValue();
-            if (random <= 0) {
-                return switch (entry.getKey()) {
-                    case SLEEP -> new SleepTask(GameConstants.SLEEP_TASK_DURATION);
-                    case OUTSIDE -> new OutsideTask(GameConstants.OUTSIDE_TASK_DURATION);
-                    case EAT -> new EatTask();
-                    case DRINK -> new DrinkTask();
-                };
-            }
-        }
-        return null;
+        // HashMap<Task, Float> map = new HashMap<>();
+        // float total = 0f;
+        // for (Task task : Task.values()) {
+        //     if (this.tasks.containsKey(task)) continue;
+        //     float weight = 1f / this.timesGotten.getOrDefault(task, 1);
+        //     map.put(task, weight);
+        //     total += weight;
+        // }
+
+        LocationsWorldComponent locations = LocationsWorldComponent.KEY.get(player.getWorld());
+        int taskCount = 4 + locations.locationCount();
+        
+        int random = this.player.getRandom().nextBetweenExclusive(0, taskCount - 1);
+        return switch (random) {
+            case 0 -> new SleepTask(GameConstants.SLEEP_TASK_DURATION);
+            case 1 -> new OutsideTask(GameConstants.OUTSIDE_TASK_DURATION);
+            case 2 -> new EatTask();
+            case 3 -> new DrinkTask();
+            default -> new VisitTask(GameConstants.VISIT_TASK_DURATION, random - 4); 
+        };
     }
 
     public float getMood() {
@@ -238,7 +239,8 @@ public class PlayerMoodComponent implements AutoSyncedComponent, ServerTickingCo
         SLEEP(nbt -> new SleepTask(nbt.getInt("timer"))),
         OUTSIDE(nbt -> new OutsideTask(nbt.getInt("timer"))),
         EAT(nbt -> new EatTask()),
-        DRINK(nbt -> new DrinkTask());
+        DRINK(nbt -> new DrinkTask()),
+        VISIT(nbt -> new VisitTask(nbt.getInt("timer"), nbt.getInt("location")));
 
         public final @NotNull Function<NbtCompound, TrainTask> setFunction;
 
@@ -367,6 +369,50 @@ public class PlayerMoodComponent implements AutoSyncedComponent, ServerTickingCo
         public NbtCompound toNbt() {
             NbtCompound nbt = new NbtCompound();
             nbt.putInt("type", Task.DRINK.ordinal());
+            return nbt;
+        }
+    }
+
+    public static class VisitTask implements TrainTask {
+        private int timer;
+        private int locationIndex;
+
+        public VisitTask(int time, int locationIndex) {
+            this.timer = time;
+            this.locationIndex = locationIndex;
+        }
+
+        public int getLocationIndex() {
+            return locationIndex;
+        }
+
+        @Override
+        public void tick(@NotNull PlayerEntity player) {
+            Location location = LocationsWorldComponent.KEY.get(player.getWorld()).getLocations().get(locationIndex);
+            if (location.area.contains(player.getPos()) && this.timer > 0) this.timer--;
+        }
+
+        @Override
+        public boolean isFulfilled(@NotNull PlayerEntity player) {
+            return this.timer <= 0;
+        }
+
+        @Override
+        public String getName() {
+            return "location";
+        }
+
+        @Override
+        public Task getType() {
+            return Task.VISIT;
+        }
+
+        @Override
+        public NbtCompound toNbt() {
+            NbtCompound nbt = new NbtCompound();
+            nbt.putInt("type", Task.VISIT.ordinal());
+            nbt.putInt("timer", this.timer);
+            nbt.putInt("location", this.locationIndex);
             return nbt;
         }
     }

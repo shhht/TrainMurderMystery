@@ -4,6 +4,7 @@ import dev.doctor4t.trainmurdermystery.TMM;
 import dev.doctor4t.trainmurdermystery.api.Role;
 import dev.doctor4t.trainmurdermystery.api.TMMGameModes;
 import dev.doctor4t.trainmurdermystery.cca.GameWorldComponent;
+import dev.doctor4t.trainmurdermystery.cca.LocationsWorldComponent;
 import dev.doctor4t.trainmurdermystery.cca.PlayerMoodComponent;
 import dev.doctor4t.trainmurdermystery.cca.PlayerPsychoComponent;
 import dev.doctor4t.trainmurdermystery.client.TMMClient;
@@ -60,7 +61,7 @@ public class MoodRenderer {
         for (PlayerMoodComponent.Task task : component.tasks.keySet()) {
             if (!renderers.containsKey(task)) {
                 for (TaskRenderer renderer : renderers.values()) renderer.index++;
-                renderers.put(task, new TaskRenderer());
+                renderers.put(task, new TaskRenderer(player));
             }
         }
         ArrayList<PlayerMoodComponent.Task> toRemove = new ArrayList<>();
@@ -207,10 +208,21 @@ public class MoodRenderer {
         public float alpha = 0.075f;
         public boolean present = false;
         public Text text = Text.empty();
+        public PlayerEntity player;
+
+        public TaskRenderer(PlayerEntity player) {
+            this.player = player;
+        }
 
         public boolean tick(PlayerMoodComponent.TrainTask present, float delta) {
-            if (present != null)
-                this.text = Text.translatable("task." + (TMMClient.isKiller() ? "fake" : "feel")).append(Text.translatable("task." + present.getName()));
+            if (present != null) {
+                if (present instanceof PlayerMoodComponent.VisitTask task) {
+                    LocationsWorldComponent component = LocationsWorldComponent.KEY.get(this.player.getWorld());
+                    this.text = Text.translatable("task." + (TMMClient.isKiller() ? "fake" : "feel")).append(Text.translatable("task." + present.getName(), component.getLocations().get(task.getLocationIndex()).name));
+                } else {
+                    this.text = Text.translatable("task." + (TMMClient.isKiller() ? "fake" : "feel")).append(Text.translatable("task." + present.getName()));
+                }
+            }
             this.present = present != null;
             this.alpha = MathHelper.lerp(delta / 16, this.alpha, present != null ? 1f : 0f);
             this.offset = MathHelper.lerp(delta / 32, this.offset, this.index);

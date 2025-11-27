@@ -16,6 +16,7 @@ public class TMMComponents implements WorldComponentInitializer, EntityComponent
         registry.register(TrainWorldComponent.KEY, TrainWorldComponent::new);
         registry.register(GameWorldComponent.KEY, GameWorldComponent::new);
         registry.register(AreasWorldComponent.KEY, AreasWorldComponent::new);
+        registry.register(LocationsWorldComponent.KEY, LocationsWorldComponent::new);
         registry.register(WorldBlackoutComponent.KEY, WorldBlackoutComponent::new);
         registry.register(GameTimeComponent.KEY, GameTimeComponent::new);
         registry.register(AutoStartComponent.KEY, AutoStartComponent::new);

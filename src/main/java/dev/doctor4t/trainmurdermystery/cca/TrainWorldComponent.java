@@ -16,7 +16,8 @@ public class TrainWorldComponent implements AutoSyncedComponent, ServerTickingCo
     public static final ComponentKey<TrainWorldComponent> KEY = ComponentRegistry.getOrCreate(TMM.id("train"), TrainWorldComponent.class);
 
     private final World world;
-    private int speed = 0; // im km/h
+    private int speed = 130; // im km/h
+    private boolean playing = true;
     private int time = 0;
     private boolean snow = true;
     private boolean fog = true;
@@ -38,6 +39,15 @@ public class TrainWorldComponent implements AutoSyncedComponent, ServerTickingCo
 
     public int getSpeed() {
         return speed;
+    }
+
+    public boolean playing() {
+        return playing;
+    }
+
+    public void setPlaying(boolean playing) {
+        this.playing = playing;
+        this.sync();
     }
 
     public float getTime() {
@@ -88,6 +98,7 @@ public class TrainWorldComponent implements AutoSyncedComponent, ServerTickingCo
     @Override
     public void readFromNbt(NbtCompound nbtCompound, RegistryWrapper.WrapperLookup wrapperLookup) {
         this.setSpeed(nbtCompound.getInt("Speed"));
+        this.setPlaying(nbtCompound.getBoolean("Playing"));
         this.setTime(nbtCompound.getInt("Time"));
         this.setSnow(nbtCompound.getBoolean("Snow"));
         this.setFog(nbtCompound.getBoolean("Fog"));
@@ -98,6 +109,7 @@ public class TrainWorldComponent implements AutoSyncedComponent, ServerTickingCo
     @Override
     public void writeToNbt(NbtCompound nbtCompound, RegistryWrapper.WrapperLookup wrapperLookup) {
         nbtCompound.putInt("Speed", speed);
+        nbtCompound.putBoolean("Playing", playing);
         nbtCompound.putInt("Time", time);
         nbtCompound.putBoolean("Snow", snow);
         nbtCompound.putBoolean("Fog", fog);
@@ -111,7 +123,7 @@ public class TrainWorldComponent implements AutoSyncedComponent, ServerTickingCo
     }
 
     private void tickTime() {
-        if (speed > 0) {
+        if (playing) {
             time++;
         } else {
             time = 0;
@@ -130,7 +142,7 @@ public class TrainWorldComponent implements AutoSyncedComponent, ServerTickingCo
         this.snow = true;
         this.fog = true;
         this.hud = true;
-        this.speed = 130;
+        this.playing = true;
         this.time = 0;
         this.sync();
     }

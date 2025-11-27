@@ -58,6 +58,7 @@ public interface GameConstants {
     int MAX_TASK_COOLDOWN = getInTicks(1, 0);
     int SLEEP_TASK_DURATION = getInTicks(0, 8);
     int OUTSIDE_TASK_DURATION = getInTicks(0, 8);
+    int VISIT_TASK_DURATION = getInTicks(0, 8);
     float MID_MOOD_THRESHOLD = 0.55f;
     float DEPRESSIVE_MOOD_THRESHOLD = 0.2f;
     float ITEM_PSYCHOSIS_CHANCE = .5f; // in percent

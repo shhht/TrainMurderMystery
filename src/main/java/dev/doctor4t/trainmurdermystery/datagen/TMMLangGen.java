@@ -120,6 +120,7 @@ public class TMMLangGen extends FabricLanguageProvider {
         builder.add("task.fake", "You could fake ");
         builder.add("task.sleep", "getting some sleep.");
         builder.add("task.outside", "getting some fresh air.");
+        builder.add("task.location", "going to %s.");
         builder.add("task.drink", "getting a drink.");
         builder.add("task.eat", "getting a snack.");
         builder.add("game.player.stung", "You feel something stinging you in your sleep.");

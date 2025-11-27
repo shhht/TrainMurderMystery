@@ -37,6 +37,7 @@ public class GameWorldComponent implements AutoSyncedComponent, ServerTickingCom
 
     private boolean lockedToSupporters = false;
     private boolean enableWeights = false;
+    private boolean killersCanJump = false;
 
     public void setWeightsEnabled(boolean enabled) {
         this.enableWeights = enabled;
@@ -44,6 +45,15 @@ public class GameWorldComponent implements AutoSyncedComponent, ServerTickingCom
 
     public boolean areWeightsEnabled() {
         return enableWeights;
+    }
+
+    public void setKillersCanJump(boolean canJump) {
+        this.killersCanJump = canJump;
+        sync();
+    }
+
+    public boolean canKillersJump() {
+        return killersCanJump;
     }
 
     public enum GameStatus {
@@ -234,6 +244,7 @@ public class GameWorldComponent implements AutoSyncedComponent, ServerTickingCom
     public void readFromNbt(@NotNull NbtCompound nbtCompound, RegistryWrapper.WrapperLookup wrapperLookup) {
         this.lockedToSupporters = nbtCompound.getBoolean("LockedToSupporters");
         this.enableWeights = nbtCompound.getBoolean("EnableWeights");
+        this.killersCanJump = nbtCompound.getBoolean("KillersCanJump");
 
         this.gameMode = TMMGameModes.GAME_MODES.get(Identifier.of(nbtCompound.getString("GameMode")));
         this.gameStatus = GameStatus.valueOf(nbtCompound.getString("GameStatus"));
@@ -266,6 +277,7 @@ public class GameWorldComponent implements AutoSyncedComponent, ServerTickingCom
     public void writeToNbt(@NotNull NbtCompound nbtCompound, RegistryWrapper.WrapperLookup wrapperLookup) {
         nbtCompound.putBoolean("LockedToSupporters", lockedToSupporters);
         nbtCompound.putBoolean("EnableWeights", enableWeights);
+        nbtCompound.putBoolean("KillersCanJump", killersCanJump);
 
         nbtCompound.putString("GameMode", this.gameMode != null ? this.gameMode.identifier.toString() : "");
         nbtCompound.putString("GameStatus", this.gameStatus.toString());
@@ -332,7 +344,7 @@ public class GameWorldComponent implements AutoSyncedComponent, ServerTickingCom
             TrainWorldComponent trainComponent = TrainWorldComponent.KEY.get(serverWorld);
 
             // spectator limits
-            if (trainComponent.getSpeed() > 0) {
+            if (trainComponent.playing()) {
                 for (ServerPlayerEntity player : serverWorld.getPlayers()) {
                     if (!GameFunctions.isPlayerAliveAndSurvival(player) && isBound()) {
                         GameFunctions.limitPlayerToBox(player, areas.playArea);
