@@ -17,7 +17,7 @@ public class TrainWorldComponent implements AutoSyncedComponent, ServerTickingCo
 
     private final World world;
     private int speed = 130; // im km/h
-    private boolean playing = true;
+    private boolean playing = false;
     private int time = 0;
     private boolean snow = true;
     private boolean fog = true;
